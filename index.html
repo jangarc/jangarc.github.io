@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+
+    #app ul{
+      padding: 0;
+    }
+
+    #app ul li{
+      padding: 0;
+      _list-style-type: none;
+      display: block;
+      font-size: 16px;
+    }
+
+    #app li a{
+      display: block;
+      padding: 5px 0 5px 5px;
+    }
+
+    #app li a:link,
+    #app li a:visited{
+      text-decoration: none;
+      color: #666;
+    }
+
+    #app li a:hover,
+    #app li a:active
+    {
+      color: #333;
+      background-color: #efefef;
+    }
+
+  </style>
+</head>
+<body>
+  
+  <div id="app">
+    <h1>Vue 3 Example Index</h1>
+    <indexlink :items="items" target="_blank"></indexlink>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.0-rc.5/vue.global.prod.js"></script>
+  <script>
+
+    const { createApp, ref } = Vue;
+
+    createApp({
+      components: {
+        indexlink:{
+          props: {
+            items: Array,
+            target: {
+              type: String,
+              default: "_blank"
+            }
+          },
+          template: `<div class="contentsBox">
+            <ol class="contentsIndex">
+              <li class="contents" v-for="item in items">
+                <a :href="item.url" :target="target">{{item.text}}</a>  
+              </li>  
+            </ol>
+          </div>`,
+        }
+      },
+      setup(){
+
+        const items = ref([
+          {url:"./asyncComponent.html", text: "動態componet"},
+          {url:"./compositionAPI_basic.html", text: "Composition API基礎使用"},
+          {url:"./customDirectives.html", text: "自定義指令"},
+          {url:"./customElement.html", text: "自定義內部標籤"},
+          {url:"./dataNotObject.html", text: "data不再是Object"},
+          {url:"./dynamicDirectiveArgs.html", text: "動態指令參數"},
+          {url:"./fallthrough.html", text: "Attr Fall-Through"},
+          {url:"./functionalComponent.html", text: "純函式compoonent"},
+          {url:"./globalApi.html", text: "全域API"},
+          {url:"./noinlineTemplate.html", text: "移除inline-template(內聯模版)"},
+          {url:"./removeDotSyncModifier.html", text: "v-model功能變更"},
+          {url:"./removeFilterOption.html", text: "移除filter option"},
+          {url:"./renderFunctionChange.html", text: "render函式變更"},
+          {url:"./renderVNode.html", text: "使用render函式+createVNode建立reactive區域(就像createApp)"},
+          {url:"./teleport.html", text: "[新特性]Teleport(傳送門=React Protals)"},
+          {url:"./transition.html", text: "transition/動態效果"},
+          {url:"./vis.html", text: "[新特性]v-is與[舊特性]is比較"},
+          {url:"./vonNoKeycode.html", text: "移除v-on的Keycode事件"},
+          {url:"./vslot.html", text: "[新特性]v-slot統一slot使用方式"},
+        ])
+
+        return {
+          items, // 向下傳
+        }
+
+      }
+    }).mount("#app")
+
+
+  </script>
+
+</body>
+</html>
