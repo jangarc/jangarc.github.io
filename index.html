@@ -5,45 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.0/css/bulma.min.css">
-  <style>
-
-    #app ul{
-      padding: 0;
-    }
-
-    #app ul li{
-      padding: 0;
-      _list-style-type: none;
-      display: block;
-      font-size: 16px;
-    }
-
-    #app li a{
-      display: block;
-      padding: 5px 0 5px 5px;
-    }
-
-    #app li a:link,
-    #app li a:visited{
-      text-decoration: none;
-      color: #666;
-    }
-
-    #app li a:hover,
-    #app li a:active
-    {
-      color: #333;
-      background-color: #efefef;
-    }
-
-  </style>
 </head>
 <body>
   
-  <div id="app" class="container is-fluid">
-    <h1 class="title is-2">Vue 3</h1>
-    <h2 class="sbutitle is-4">VUE 3 Example</h2>
-    <indexlink :items="items" target="_blank"></indexlink>
+  <div id="app" class="container" style="margin: 20px auto;">
+    <p class="title is-2">Cookbook Example HTML</p>
+    <p class="title is-4"># VUE 3 example</p>
+    <indexlink :items="items" :get-status="getStatus" target="_blank"></indexlink>
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.0-rc.5/vue.global.prod.js"></script>
@@ -56,46 +24,67 @@
         indexlink:{
           props: {
             items: Array,
+            getStatus: Function,
             target: {
               type: String,
               default: "_blank"
             }
           },
-          template: `<div class="contentsBox">
-            <ol class="contentsIndex">
-              <li class="contents" v-for="item in items">
-                <a :href="item.url" :target="target">{{item.text}}</a>  
-              </li>  
-            </ol>
-          </div>`,
+          template: `<table class="table" style="width: 100%;">
+            <thead>
+              <tr>
+                <th style="width:40px;">#</th> 
+                <th>內容</th>  
+                <th>連結</th>  
+                <th style="width:80px;">狀態</th>  
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(item, index) in items">
+                <td>{{ index + 1 }}</td>  
+                <td>{{ item.text }}</td>  
+                <td>
+                  <a :href="item.url" :target="target">{{ item.url }}</a>  
+                </td>  
+                <td>{{ getStatus(item.status) }}</td>  
+              </tr>
+            </tbody>
+          </table>`,
         }
       },
       setup(){
 
         const items = ref([
-          {url:"./Vue3Example/asyncComponent.html", text: "動態componet"},
-          {url:"./Vue3Example/compositionAPI_basic.html", text: "Composition API基礎使用"},
-          {url:"./Vue3Example/customDirectives.html", text: "自定義指令"},
-          {url:"./Vue3Example/customElement.html", text: "自定義內部標籤"},
-          {url:"./Vue3Example/dataNotObject.html", text: "data不再是Object"},
-          {url:"./Vue3Example/dynamicDirectiveArgs.html", text: "動態指令參數"},
-          {url:"./Vue3Example/fallthrough.html", text: "Attr Fall-Through"},
-          {url:"./Vue3Example/functionalComponent.html", text: "純函式compoonent"},
-          {url:"./Vue3Example/globalApi.html", text: "全域API"},
-          {url:"./Vue3Example/noinlineTemplate.html", text: "移除inline-template(內聯模版)"},
-          {url:"./Vue3Example/removeDotSyncModifier.html", text: "v-model功能變更"},
-          {url:"./Vue3Example/removeFilterOption.html", text: "移除filter option"},
-          {url:"./Vue3Example/renderFunctionChange.html", text: "render函式變更"},
-          {url:"./Vue3Example/renderVNode.html", text: "使用render函式+createVNode建立reactive區域(就像createApp)"},
-          {url:"./Vue3Example/teleport.html", text: "[新特性]Teleport(傳送門=React Protals)"},
-          {url:"./Vue3Example/transition.html", text: "transition/動態效果"},
-          {url:"./Vue3Example/vis.html", text: "[新特性]v-is與[舊特性]is比較"},
-          {url:"./Vue3Example/vonNoKeycode.html", text: "移除v-on的Keycode事件"},
-          {url:"./Vue3Example/vslot.html", text: "[新特性]v-slot統一slot使用方式"},
+          {url:"./Vue3Example/asyncComponent.html", text: "動態componet", status: "O"},
+          {url:"./Vue3Example/compositionAPI_basic.html", text: "Composition API基礎使用", status: "O"},
+          {url:"./Vue3Example/customDirectives.html", text: "自定義指令", status: "O"},
+          {url:"./Vue3Example/customElement.html", text: "自定義內部標籤", status: "O"},
+          {url:"./Vue3Example/dataNotObject.html", text: "data不再是Object", status: "O"},
+          {url:"./Vue3Example/dynamicDirectiveArgs.html", text: "動態指令參數", status: "O"},
+          {url:"./Vue3Example/fallthrough.html", text: "Attr Fall-Through", status: "O"},
+          {url:"./Vue3Example/functionalComponent.html", text: "純函式compoonent", status: "O"},
+          {url:"./Vue3Example/globalApi.html", text: "全域API", status: "O"},
+          {url:"./Vue3Example/noinlineTemplate.html", text: "移除inline-template(內聯模版)", status: "O"},
+          {url:"./Vue3Example/removeDotSyncModifier.html", text: "v-model功能變更", status: "O"},
+          {url:"./Vue3Example/removeFilterOption.html", text: "移除filter option", status: "O"},
+          {url:"./Vue3Example/renderFunctionChange.html", text: "render函式變更", status: "O"},
+          {url:"./Vue3Example/renderVNode.html", text: "使用render函式+createVNode建立reactive區域(就像createApp)", status: "O"},
+          {url:"./Vue3Example/teleport.html", text: "[新特性]Teleport(傳送門=React Protals)", status: "O"},
+          {url:"./Vue3Example/transition.html", text: "transition/動態效果", status: "O"},
+          {url:"./Vue3Example/vis.html", text: "[新特性]v-is與[舊特性]is比較", status: "O"},
+          {url:"./Vue3Example/vonNoKeycode.html", text: "移除v-on的Keycode事件", status: "O"},
+          {url:"./Vue3Example/vslot.html", text: "[新特性]v-slot統一slot使用方式", status: "O"},
         ])
+
+        function getStatus(status){
+          if(status=="O") return "己完成"
+          if(status=="W") return "開發中"
+          if(status=="C") return "己關閉"
+        }
 
         return {
           items, // 向下傳
+          getStatus,
         }
 
       }
