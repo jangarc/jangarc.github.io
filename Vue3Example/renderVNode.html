@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>render + createVNode</title>
+</head>
+<body>
+
+  <div id="app"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.0-rc.5/vue.global.prod.js"></script>
+  <!-- <script src="/scripts/vue.global.js"></script> -->
+  <script>
+
+    const { h, render, createVNode, ref } = Vue;
+
+    // 使用 render 和 createVNode 建立 CreateApp
+    function creaetApp(nodeQuery){
+
+      // 取得HTML DOM當container(容器)
+      const container = document.querySelector(nodeQuery);
+
+      if(!container) return console.error(`找不到指定節點 {nodeQuery}`);
+
+      // custom render
+      const vnode = createVNode({
+        inheritAttrs: false, // 不繼承
+        // // createVNode 不能載入外部components TODO: ?? 待查源碼
+        // components: {
+        //   head:{
+        //     template:`<div class="headComp"><slot></slot></div>`,
+        //     mounted(){
+        //       console.log("??")
+        //     }
+        //   },
+        // },
+        // // template字串
+        // template: `<h1>
+        //   <head>Hello {{name}}</head>
+        //   <button ref='button' @click='add'>Add</button>
+        //   {{count}}
+        // </h1>
+        // `,
+        props: ["name"],
+        setup(props, {attrs, slots}){
+
+          var count = ref(0);
+
+          var add = () => count.value++;
+          //console.log(props, attrs, slots)
+
+          // // 直接返回資料, 可以使用 template:String, render:Function
+          // return {
+          //   count,
+          //   add
+          // }
+
+          var head = {
+            template:`<div class="headComp"><slot></slot></div>`,
+            mounted(){
+              console.log("??")
+            }
+          }
+
+          return () => createVNode("h1", null, [
+            createVNode(head, null, ["Hello ", props.name]),
+            createVNode("button", {onClick:()=>add()}, "Add"),
+            count.value
+          ])
+
+        }
+      }, { name: "arc", tel:"07777" });
+
+      console.log(vnode)
+
+      render( vnode,  container );
+
+      return vnode.component.proxy;
+
+    }
+
+    var app = creaetApp("#app");
+
+    //console.log("[html log] app => ", app)
+
+
+
+
+  </script>
+</body>
+</html>

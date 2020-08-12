@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Functional Component</title>
+  <style>
+    #app {
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="app">
+    <example name="Arc" class="title" :id="{name:'arc', child: [{name:'arc'}]}">Hello</example>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.0-rc.5/vue.global.prod.js"></script>
+  <script>
+    
+    const { h, createApp } = Vue;
+
+    const example = (props, {slots, attrs}) => 
+      h("div", null, [
+        h( "h1", null, "default slot"),
+        slots.default(), 
+        h( "h1", null, "props"),
+        h( "pre", null, JSON.stringify({...props}, null, 2) ), 
+        h( "h1", null, "attrs"),
+        h( "pre", null, JSON.stringify({...attrs}, null, 2) )
+      ])
+
+    // 明確的定義props
+    example.props = {
+      name: String
+    };
+    // 如果沒有定義props時 props 內容會等同 attrs
+
+    createApp({
+      components: {
+        example
+      },
+    })
+    .mount("#app");
+
+  </script>
+  
+</body>
+</html>

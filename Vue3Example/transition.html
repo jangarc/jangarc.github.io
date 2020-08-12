@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transition</title>
+  <style>
+    
+    .fade-enter-active, .fade-leave-active {
+      transition: opacity .5s;
+    }
+      
+    .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+      opacity: 0;
+    }
+    
+  </style>
+</head>
+<body>
+
+  <div id="app">
+    <button @click="toggle">Toggle</button>
+    <example :show="show" title="Transition test">Default slot message</example>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.0-rc.5/vue.global.prod.js"></script>
+  <script>
+    
+    const { h, createApp } = Vue;
+
+    const example = {
+      props: ["title", "show"],
+      template: `
+      <transition name="fade" v-if="show">
+        <h1><slot></slot></h1>
+      </transition>
+      `,
+    };
+
+    const example2 = {
+      props: ["title", "show"],
+      template: `
+      <transition name="fade">
+        <h1 v-if="show">{{title}}</h1>
+      </transition>
+      `,
+    };
+
+    createApp({
+      components: {
+        example
+      },
+      data(){
+        return {
+          show: true
+        }
+      },
+      methods: {
+        toggle(){
+          this.show = !this.show;
+        }
+      }
+    })
+    .mount("#app");
+
+  </script>
+  
+</body>
+</html>

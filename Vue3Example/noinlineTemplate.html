@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>remove inline-template</title>
+</head>
+<body>
+  
+  <div id="app">
+
+    <h1>使用inline-template(下例在Vue2中測式正常/Vue3中失效)</h1>
+
+    <example inline-template>
+      <div>Hello</div>
+    </example>
+
+    <div>
+      <a href="https://jsfiddle.net/abcdarc/qxa37ctL/" target="_blank">Vue2 jsfiddle example</a>
+    </div>
+
+    <!-- *************************************** -->
+
+    <h1>Vue3中請使用v-slot:message</h1>
+
+    <example v-slot:message>
+      <div>Hello</div>
+    </example>
+
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.0-rc.5/vue.global.prod.js"></script>
+  <script>
+
+    Vue.createApp({
+      components: {
+        example: {
+          template: `<div><slot name="message">example</slot></div>`
+        }
+      }
+    }).mount("#app");
+    
+  </script>
+</body>
+</html>

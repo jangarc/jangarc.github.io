@@ -1,0 +1,73 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Global API Compile</title>
+</head>
+<body>
+  <div id="temp" style="display: none;">
+    <h1>GGG</h1>
+  </div>
+  <div id="app"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.0-rc.5/vue.global.prod.js"></script>
+  <script id="temp2" type="x-template">
+    <div>
+      <h4>X-TEMPLATE</h4>
+    </div>
+  </script>
+  <script>
+
+    const { compile, createVNode, createApp } = Vue;
+
+    createApp({
+      data(){
+        return {
+          title:"parent",
+          type: 1
+        }
+      },
+      methods: {
+        add(){
+          this.title += " PPP ";
+        },
+        toggle(){
+          this.type = this.type===1 ? 0 : 1
+        }
+      },
+      render(){
+
+        // 使用模版
+        const template = `<div><p><button @click="add">PUSH</button></p>{{title}}</div>`;
+
+        // 使用模版
+        const template2 = this.type===1 ?
+          `<div><p><button @click="toggle">TOGGLE</button></p>A block</div>`
+          : `<div><p><button @click="toggle">TOGGLE</button></p>B block</div>`
+        ;
+
+        const RenderFn = compile(template); // 結果為: (_ctx, _cache) => { ...}
+        const RenderFn2 = compile(template2); // 結果為: (_ctx, _cache) => { ...}
+
+        // 建立被compile的節點內容
+        return [
+          createVNode(RenderFn.bind(null, this)),
+          createVNode(RenderFn2.bind(null, this))
+        ]
+        ;
+
+        // // 可以使用指定節點做template
+        // return createVNode(compile("#temp"));
+
+        // // 也可以使用 x-template做為模版
+        // return createVNode(compile("#temp2"));
+
+      }
+    })
+    .mount("#app")
+
+  </script>
+
+</body>
+</html>

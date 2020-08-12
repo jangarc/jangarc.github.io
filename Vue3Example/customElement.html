@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom Element interop</title>
+
+</head>
+<body>
+  
+  <div id="app">
+    <h1>
+      button(plastic-button)<br>
+      和button2(plastic-button2)<br>
+      都被保留了所以無法正常顯示
+    </h1>
+    <plastic-button>button</plastic-button><br>
+    <plastic-button2>button2</plastic-button2><br>
+    <plastic3-button>button3</plastic3-button>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.0-rc.5/vue.global.prod.js"></script>
+  <script>
+
+    const app = Vue.createApp({
+      components: {
+        "plastic-button": {
+          template: "<button><slot></slot></button>"
+        },
+        "plastic-button2": {
+          template: "<button><slot></slot></button>"
+        },
+        "plastic3-button": {
+          template: "<button><slot></slot></button>"
+        },
+      },
+      mounted(){
+        console.log(this)
+      }
+    });
+
+    // 原本的string, array, regex被改為函式(function), 只要比對結果為 true 的標簽都將被認為是保留標簽
+    app.config.isCustomElement = tag => tag.startsWith("plastic-")
+
+    app.mount("#app");
+
+  </script>
+</body>
+</html>

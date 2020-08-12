@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>remove filter option</title>
+</head>
+<body>
+  
+  <div id="app">
+
+    <h1># 原值</h1>
+    <div><strong>title source:</strong> {{ title }}</div>
+
+    <h1># 使用filter表達示 title | upper (下例在Vue2中測式正常/Vue3中失效)</h1>
+    <div> title: {{ title | upper }}</div>
+    <p><strong>上例結果為(0)因為：</strong> ( "Remove filter option" | undefined === 0 )</p>
+
+    <h1># 使用函式upperMethod(title)</h1>
+    <div><strong>title:</strong> {{ upperMethod(title) }}</div>
+
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.0-rc.5/vue.global.prod.js"></script>
+  <script>
+
+    Vue.createApp({
+      data(){
+        return {
+          title: "Remove filter option"
+        }
+      },
+      methods:{
+        upperMethod(value){
+          console.log(value)
+          return (value || '').toUpperCase()
+        },
+      },
+      filters:{
+        upper(value){
+          return (value || '').toUpperCase()
+        }
+      }
+    }).mount("#app");
+    
+  </script>
+</body>
+</html>

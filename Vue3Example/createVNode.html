@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>createVNode</title>
+</head>
+<body>
+
+  <div id="app"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.0-rc.5/vue.global.prod.js"></script>
+  <script>
+
+    const { h, createVNode, render, resolveComponent } = Vue;
+
+    const VNode = createVNode({
+      components:{
+        example:{
+          template: "<div><slot>Example</slot></div>"
+        }
+      },
+      setup(props, {attrs, emit, slots}){
+
+        let example = resolveComponent("example");
+
+        return () => createVNode("div", null, [
+          `Name ${ attrs.name } / Tel ${ attrs.tel }`,
+          createVNode(example),
+          createVNode(example, null, "Custom Example Message")
+        ]);
+
+      }
+    }, { name:"arc", tel:"07-1234567" });
+
+    render(VNode, document.getElementById("app"))
+
+  </script>
+
+</body>
+</html>

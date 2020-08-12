@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>is && v-is</title>
+
+</head>
+<body>
+
+  <div id="app">
+    <example title="default"></example>
+    <div v-is="'example'" title="使用 v-is 在除了<component>的其它標簽"></div>
+    <div v-is="exampleTag" title="使用 v-is 在除了<component>的其它標簽"></div>
+    <component is="example" title="只在<component>標簽使用 is"></component>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.0-rc.5/vue.global.prod.js"></script>
+  <script>
+
+    Vue.createApp({
+      components: {
+        example: {
+          props: ["title"],
+          template: "<h1>{{title}}</h1>"
+        },
+      },
+      data(){
+        return {
+          exampleTag: "example"
+        }
+      }
+    })
+    .mount("#app")
+
+  </script>
+</body>
+</html>

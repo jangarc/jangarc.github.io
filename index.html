@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.0/css/bulma.min.css">
   <style>
 
     #app ul{
@@ -39,8 +40,9 @@
 </head>
 <body>
   
-  <div id="app">
-    <h1>Vue 3 Example Index</h1>
+  <div id="app" class="container is-fluid">
+    <h1 class="title is-2">Vue 3</h1>
+    <h2 class="sbutitle is-4">VUE 3 Example</h2>
     <indexlink :items="items" target="_blank"></indexlink>
   </div>
 
@@ -71,25 +73,25 @@
       setup(){
 
         const items = ref([
-          {url:"./asyncComponent.html", text: "動態componet"},
-          {url:"./compositionAPI_basic.html", text: "Composition API基礎使用"},
-          {url:"./customDirectives.html", text: "自定義指令"},
-          {url:"./customElement.html", text: "自定義內部標籤"},
-          {url:"./dataNotObject.html", text: "data不再是Object"},
-          {url:"./dynamicDirectiveArgs.html", text: "動態指令參數"},
-          {url:"./fallthrough.html", text: "Attr Fall-Through"},
-          {url:"./functionalComponent.html", text: "純函式compoonent"},
-          {url:"./globalApi.html", text: "全域API"},
-          {url:"./noinlineTemplate.html", text: "移除inline-template(內聯模版)"},
-          {url:"./removeDotSyncModifier.html", text: "v-model功能變更"},
-          {url:"./removeFilterOption.html", text: "移除filter option"},
-          {url:"./renderFunctionChange.html", text: "render函式變更"},
-          {url:"./renderVNode.html", text: "使用render函式+createVNode建立reactive區域(就像createApp)"},
-          {url:"./teleport.html", text: "[新特性]Teleport(傳送門=React Protals)"},
-          {url:"./transition.html", text: "transition/動態效果"},
-          {url:"./vis.html", text: "[新特性]v-is與[舊特性]is比較"},
-          {url:"./vonNoKeycode.html", text: "移除v-on的Keycode事件"},
-          {url:"./vslot.html", text: "[新特性]v-slot統一slot使用方式"},
+          {url:"./Vue3Example/asyncComponent.html", text: "動態componet"},
+          {url:"./Vue3Example/compositionAPI_basic.html", text: "Composition API基礎使用"},
+          {url:"./Vue3Example/customDirectives.html", text: "自定義指令"},
+          {url:"./Vue3Example/customElement.html", text: "自定義內部標籤"},
+          {url:"./Vue3Example/dataNotObject.html", text: "data不再是Object"},
+          {url:"./Vue3Example/dynamicDirectiveArgs.html", text: "動態指令參數"},
+          {url:"./Vue3Example/fallthrough.html", text: "Attr Fall-Through"},
+          {url:"./Vue3Example/functionalComponent.html", text: "純函式compoonent"},
+          {url:"./Vue3Example/globalApi.html", text: "全域API"},
+          {url:"./Vue3Example/noinlineTemplate.html", text: "移除inline-template(內聯模版)"},
+          {url:"./Vue3Example/removeDotSyncModifier.html", text: "v-model功能變更"},
+          {url:"./Vue3Example/removeFilterOption.html", text: "移除filter option"},
+          {url:"./Vue3Example/renderFunctionChange.html", text: "render函式變更"},
+          {url:"./Vue3Example/renderVNode.html", text: "使用render函式+createVNode建立reactive區域(就像createApp)"},
+          {url:"./Vue3Example/teleport.html", text: "[新特性]Teleport(傳送門=React Protals)"},
+          {url:"./Vue3Example/transition.html", text: "transition/動態效果"},
+          {url:"./Vue3Example/vis.html", text: "[新特性]v-is與[舊特性]is比較"},
+          {url:"./Vue3Example/vonNoKeycode.html", text: "移除v-on的Keycode事件"},
+          {url:"./Vue3Example/vslot.html", text: "[新特性]v-slot統一slot使用方式"},
         ])
 
         return {

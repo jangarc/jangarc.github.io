@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>data not allow a object</title>
+</head>
+<body>
+  
+  <div id="app1">
+    <h1>APP1: {{title}}</h1>
+  </div>
+  
+  <div id="app2">
+    <h1>APP2: {{title}}</h1>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.0-rc.5/vue.global.prod.js"></script>
+  <script>
+    
+    const { h, createApp, reactive } = Vue;
+
+    try
+    {
+      
+      createApp({
+        data(){
+          return {
+            title: "title in app1"
+          }
+        }
+      }).mount("#app1");
+
+      // 將會報錯
+      createApp({
+        data:{
+          title: "title in app2"
+        }
+      }).mount("#app2");
+
+    }
+    catch(e){
+      alert(e)
+    }
+    
+  </script>
+</body>
+</html>

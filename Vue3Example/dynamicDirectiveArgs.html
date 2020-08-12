@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>dynamic directive args</title>
+</head>
+<body>
+  
+  <div id="app">
+    <p>Now event: {{eventkey}}</p>
+    <button @click="toggle">toggle</button>
+    <input @[eventkey]="pushLog($event)" :[valuekey]="message"/>
+    <ul>
+      <li v-for="log in logs">{{log.eventType}}/{{log.eventKey}}</li>
+    </ul>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.0-rc.5/vue.global.prod.js"></script>
+  <script>
+
+    Vue.createApp({
+      data(){
+        return {
+          message: "Dynamic directive arguments",
+          valuekey: "value",
+          eventkey: "focus",
+          logs: [],
+        }
+      },
+      methods:{
+        toggle(){
+          this.eventkey = this.eventkey === "focus" ? "blur" : "focus"
+        },
+        pushLog(event){
+          this.logs.push({
+            eventType: event.type,
+            eventKey: this.eventkey
+          })
+        }
+      },
+    })
+    .mount("#app")
+  </script>
+</body>
+</html>

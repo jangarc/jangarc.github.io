@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>v-slot</title>
+</head>
+<body>
+  
+  <div id="app">
+
+    <!-- 1. 直接使用 -->
+    <example title="User login log"></example>
+
+    <!-- 2. 使用v-slot 在title前加上#號 -->
+    <example title="User login log">
+      <template v-slot:title-before># </template>
+    </example>
+
+    <!-- 3. 使用注入資料 -->
+    <example title="User login log" :logs="logs">
+      <template v-slot:title-before="logs">({{logs.length}}) </template>
+    </example>
+
+    <!-- 4. 使用v-slot縮寫 -->
+    <example title="User login log" :logs="logs">
+      <template #title-before="logs">({{logs.length}}) </template>
+    </example>
+
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.0-rc.5/vue.global.prod.js"></script>
+  <script>
+
+    const example = {
+      template: `
+      <div>
+        <h1>
+          <slot name="title-before" v-bind="logs"></slot>
+          {{title}}
+        </h1>
+        <ul v-if="logs && logs.length > 0">
+          <li v-for="log in logs">{{log.date}}</li>
+        </ul>
+      </div>
+      `,
+      props:{
+        title: String,
+        logs: {
+          type: Array,
+          default: []
+        }
+      }
+    };
+    
+    Vue.createApp({
+      components:{
+        example
+      },
+      data(){
+        return {
+          title: "User login logs",
+          logs: [
+            {date: "2020/07/01 08:31:07"},
+            {date: "2020/07/01 16:07:35"},
+            {date: "2020/07/03 15:42:17"},
+            {date: "2020/07/06 07:29:43"},
+            {date: "2020/07/07 15:41:25"},
+            {date: "2020/07/11 16:07:35"},
+          ]
+        }
+      },
+    })
+    .mount("#app")
+
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>v-on no keycode</title>
+</head>
+<body>
+  
+  <div id="app">
+
+    <div>Key Code: {{keycode}}</div>
+    
+    <div>
+      <label>keydown(無指定事件)</label>
+      <input 
+        type="text" 
+        @keydown="checkKeyCode"
+      >
+    </div>
+
+    <div>
+      <label>keydown.13(禁用)</label>
+      <input 
+        type="text" 
+        @keydown.13="checkKeyCode"
+      >
+    </div>
+
+    <div>
+      <label>keydown.enter(保留)</label>
+      <input 
+        type="text" 
+        @keydown.enter="checkKeyCode"
+      >
+    </div>
+
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.0-rc.5/vue.global.prod.js"></script>
+  <script>
+
+    Vue.createApp({
+      data(){
+        return {
+          keycode: null
+        }
+      },
+      methods:{
+        checkKeyCode(event){
+          this.keycode = event.keyCode;
+          event.preventDefault()
+        }
+      }
+    }).mount("#app");
+    
+  </script>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>remove .sync modifier</title>
+</head>
+<body>
+  
+  <div id="app">
+    <example v-model:name="pname" ></example>
+    <!-- 下例等價上例 -->
+    <!-- <example :name="pname" @update:name="event => pname = event" ></example> -->
+    <input type="text" v-model="pname">
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.0-rc.5/vue.global.prod.js"></script>
+  <script>
+
+    Vue.createApp({
+      components: {
+        example: {
+          props: ["name"],
+          template: `<h1>Hello {{name}}</h1>`
+        }
+      },
+      data(){
+        return {
+          pname: "Vue3"
+        }
+      }
+    }).mount("#app");
+    
+  </script>
+</body>
+</html>

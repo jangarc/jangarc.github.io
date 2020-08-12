@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>async component</title>
+  <style>
+    .code{
+      border: 1px solid #efefef;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+  
+  <div id="app">
+
+    <p>[注意] 要測式該範例需確認你的vue版本是prod不是dev版, 因為dev版本錯誤時會執行throw error, 進而阻止返回error component</p>
+    <p>
+      用法: 
+      <pre class="code">
+Vue.defineAsyncComponent(
+  () => new Promise( (resolve, reject) => resolve([component/要返回的component格式]);)
+)
+      </pre>
+    </p>
+
+    <hr>
+
+    <h1>測式1: 直接返回component物件</h1>
+    <p>
+      程式碼:
+      <pre class="code">
+Vue.CreateApp({
+  compontnes: {
+    test1: Vue.defineAsyncComponent( loaderFn )
+  }
+})
+      </pre>
+    </p>
+    <h2>執行結果:</h2>
+    <test1>TEST 1</test1>
+
+    <hr>
+
+    <h1>測式2: 完整的異步component</h1>
+    <p>
+      程式碼:
+      <pre class="code">
+Vue.CreateApp({
+  compontnes: {
+    test2: Vue.defineAsyncComponent(
+      () => new Promise( (resolve, reject) => 
+        resolve(
+          {
+            loader: loaderFn,
+            loadingComponent: loadingComp(),
+            errorComponent: errorAsyncLoaderComp(),
+            onError(error, retry, end, retryCount){
+              if(retryCount > 2) end(); // 重試3次後結束
+              else retry();
+            }
+          }
+        )
+      )
+    )
+  }
+})
+      </pre>
+    </p>
+    <h2>執行結果:</h2>
+    <test2>TEST 2</test2>
+
+    <hr>
+    <h1>測式3: 讀取錯誤時執行重試, 並變更讀取中訊息</h1>
+    <p>
+      程式碼:
+      <pre class="code">
+Vue.CreateApp({
+  compontnes: {
+    test3: Vue.defineAsyncComponent(
+      () => new Promise( (resolve, reject) => 
+        resolve(
+          {
+            loader: loaderErrorFn,
+            loadingComponent: loadingComp(),
+            errorComponent: errorAsyncLoaderComp(),
+            onError(error, retry, end, retryCount){
+              if(retryCount > 2) end(); // 重試3次後結束
+              else retry();
+            }
+          }
+        )
+      )
+    )
+  }
+})
+
+      </pre>
+    </p>
+    <h2>執行結果:</h2>
+    <test3>TEST 3</test3>
+
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.0-rc.5/vue.global.prod.js"></script>
+  <!-- <script src="/scripts/vue.global.js"></script> -->
+  <script>
+
+    const { h, createApp, defineAsyncComponent, ref } = Vue;
+
+    function testComp(){
+      return {
+        template:`<h1 class="testComp"><slot></slot></h1>`,
+      }
+    }
+
+    // [選用]讀取中使用的component
+    function loadingComp(){
+      return {
+        template:`<h3 class="loadingComp">Async Component Loading......</h3>`,
+      }
+    }
+
+    // [選用]讀取中使用的component
+    function loadingComp2(){
+
+      // 建立ref資料連結
+      const isRetry = ref(false); // 是否重試
+      const retryCount = ref(0);
+      
+      // 變更重試訊息
+      const doRetry= () => {
+        isRetry.value = true;
+        retryCount.value ++;
+      };
+
+      return {
+        doRetry: doRetry,
+        component: {
+          setup(){
+
+            return () => h("h3", {class:"loadingComp"}, [
+              (!isRetry.value ? "Async Component Loading......" : "retry " + retryCount.value)
+            ])
+          }
+        }
+      }
+
+    }
+
+    // 錯誤時執行
+    function errorAsyncLoaderComp(props){
+      return {
+        template:`<div class="errorComp">{{error}}</div>`,
+        props: ["error"]
+      }
+    }
+
+    const loaderFn = () => new Promise((resolve, reject)=>{
+      setTimeout(()=> resolve(testComp()), 2000)
+    });
+
+    const loaderErrorFn = () => new Promise((resolve, reject)=>{
+      setTimeout(()=> reject("讀取失敗"), 2000)
+    });
+
+    const AsyncComponent = defineAsyncComponent({
+      loader: loaderFn,
+      loadingComponent: loadingComp(),
+      errorComponent: errorAsyncLoaderComp(),
+      onError(error, retry, end, retryCount){
+        if(retryCount > 2) end(); // 重試3次後結束
+        else retry();
+      }
+    })
+
+    var retryComp = loadingComp2();
+    
+    const AsyncErrorComponent = defineAsyncComponent({
+      loader: loaderErrorFn,
+      loadingComponent: retryComp.component,
+      errorComponent: errorAsyncLoaderComp(),
+      onError(error, retry, end, retryCount){
+        console.log(arguments)
+        if(retryCount > 2) end(); // 重試3次後結束
+        else
+        {
+          retryComp.doRetry();
+          retry();
+        }
+      }
+    })
+
+    createApp({
+      components:{
+        test1: defineAsyncComponent(loaderFn),
+        test2: AsyncComponent,
+        test3: AsyncErrorComponent,
+      },
+    }).mount("#app");
+
+  </script>
+</body>
+</html>

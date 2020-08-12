@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Render Function change</title>
+</head>
+<body>
+  
+  <div id="app1"></div>
+  <div id="app2"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.0-rc.5/vue.global.prod.js"></script>
+  <script>
+
+    const { h, createApp, ref } = Vue;
+
+    const vue2ExampleObje = {
+      on: {
+        click: "() => this.add()"
+      }
+    };
+
+    const vue3ExampleObje = {
+      onClick: "() => this.add()"
+    };
+
+    createApp({
+      data(){
+        return {
+          count: 0,
+        }
+      },
+      methods:{
+        increase(){
+          this.count++;
+        }
+      },
+      render(_h){
+
+        // 在Vue2中使用 render函式帶的 _h進行render, 這裡使用Vue3的h函式
+        return h(
+          "div", 
+          null, 
+          [
+            h("h1", "in Vue 2 沒有參數平面化on是個物件"),
+            h("p", "掛載方式如下"),
+            h("pre", JSON.stringify(vue2ExampleObje, null, 2)),
+            h("p", "Increase按鈕事件不會被觸發，因為掛載方式變更，所以在Vue3中該設定方式失效!"),
+            h("p", null, ["[ in vue2 ] count: ", this.count]),
+            h(
+              "button", 
+              {
+                // 在Vue2中多一層
+                on: {
+                  click: () => this.add()
+                }
+              }, 
+              "Increase"
+            )
+          ]
+        )
+
+      }
+    }).mount("#app1");
+
+    createApp({
+      setup(){
+
+        let count = ref(0);
+
+        let add = ()=> count.value++;
+        
+        return () => h(
+          "div", 
+          null,  
+          [
+            h("h1", "in Vue 3參數已平面化"),
+            h("p", "掛載方式如下"),
+            h("pre", JSON.stringify(vue3ExampleObje, null, 2)),
+            h("p", "掛載方式正確，Increase按鈕事件掛載成功"),
+            h("p", null, ["[ in vue3 ] count: ", count.value]),
+            h(
+              "button", 
+              {
+                // 平面化
+                onClick: () => add()
+              }, 
+              "Increase"
+            )
+          ]
+        )
+      }
+    }).mount("#app2");
+    
+  </script>
+</body>
+</html>

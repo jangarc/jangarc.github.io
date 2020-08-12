@@ -1,0 +1,151 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Composition  API TEST....</title>
+</head>
+<body>
+
+  <div id="app">
+
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.0-rc.5/vue.global.prod.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ramda/0.27.1/ramda.min.js"></script>
+  <!-- <script src="/scripts/vue.global.js"></script> -->
+
+  <script>
+
+    const { curry, compose } = R;
+
+    const { h, createApp, createVNode, compile, createSlots, defineComponent, reactive, ref } = Vue;
+    let call;
+    const app = createApp({
+      // components: {
+      //   example:{
+      //     template: "<h1><slot>EXAMPLE</slot></h1>",
+      //     mounted(){
+      //       //this.$slots.default = createVNode(compile("<h1>?????</h1>"))
+      //       console.log(this.$slots)
+      //     }
+      //   }
+      // },
+      render(){
+
+        var self = this;
+        console.log("change??")
+
+        //return "Hello"; // 渲染一個字串
+
+        // // 渲染一個字串VNode
+        // return [
+        //   Vue.createTextVNode("Hello?"+this.title),
+        //   Vue.createBlock("button", {onClick: ()=>self.add()}, "DD")
+        // ]
+
+        // // Vue.createBlock 通常被用來當做節點
+        // // 渲染區塊 [注意] 在 Block裡 this.title 永遠都不會被觸發, 會被當成靜態區塊
+        // return [
+        //   Vue.createBlock("div", {class:"container"}, this.title),
+        //   Vue.createBlock("button", {onClick: ()=>this.add()}, "DD")
+        // ]
+
+        // // 渲染靜態節點和createBlock一樣都沒有reactive特性
+        // return [
+        //   Vue.createStaticVNode(`<div>${this.title}</div>`),
+        //   Vue.createStaticVNode(`<button onclick="console.log(this)">${this.title}</button>`)
+        // ];
+
+        // // 渲染一個VNode
+        // return createVNode( compile(`<div>
+        //   <h2>{{title}}</h2>
+        //   <example>test</example>
+        //   <test></test>
+        //   <button @click="add">OO</button>
+        //   </div>
+        // `).bind(null, this) )
+
+        // // 渲染一個或多個VNode(無法繼承Parent的屬性)
+        // let TestVNode = createVNode({
+        //   setup(){
+        //     return () => h(
+        //       "div",
+        //       null,
+        //       [
+        //         "9999",
+        //         h("div", null, self.title),
+        //         h("button", {onClick:self.add}, "PP")
+        //       ]
+        //     )
+        //   }
+        // });
+        // return TestVNode;
+        // return [TestVNode];
+
+        // 渲染一個函式
+        // var test = ()=> h("h1", null, this.title);
+        // return h(test)
+
+      },
+
+      setup(){
+
+        let title = ref("title")
+
+        let add = () => title.value += "KKKK ";
+
+        return {title, add}
+
+        // let comp = {
+        //   props: ["temp"],
+        //   template: `<h1>
+        //     <component is='test' title="component is"></component>
+        //     <div v-is="'test'" title="v-is"></div>
+        //     <div v-is="temp" title="v-is"><template v-slot="obj">Default Slot{{obj.title}}</template></div>
+        //   </h1>`
+        // };
+
+        // return () => [
+        //   h("button", { onClick: add }, "Push"),
+        //   h(defineComponent(comp), {temp:"test"},  [">>>>>>>"]),
+        //   h("h1", null, title.value),
+        // ];
+
+      },
+      mounted(){
+
+      }
+    });
+
+    app.component("example", {
+      template: "<h1><slot>EXAMPLE</slot></h1>",
+      mounted(){
+        //this.$slots.default = createVNode(compile("<h1>?????</h1>"))
+        console.log(this.$slots)
+      }
+    });
+
+    var testFn = (props, {attrs, slots})=> h(
+      "h1",
+      null,
+      [
+        "TEST",
+        slots.default && slots.default({...props, ...attrs})
+      ]
+    );
+
+    testFn.props = {
+      title: String
+    }
+
+    app.component("test", testFn )
+
+    app.mount("#app");
+
+    console.log(app._container._vnode)
+
+  </script>
+
+</body>
+</html>

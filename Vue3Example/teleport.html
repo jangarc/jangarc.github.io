@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>teleport</title>
+  <style>
+
+    html, body{
+      height: 100%;
+    }
+
+    table tr td{
+      vertical-align: top;  
+    }
+    
+  </style>
+</head>
+<body>
+  
+  <div style="height: 100%;">
+    <table style="width: 100%;height:100%;">
+      <tr>
+        <td style="width: 50%;height:50%;">
+          <div id="app">
+            <h1>Block1(Parent IN Here)</h1>
+            <p>status: {{statusText}} / block: {{dynamicBlock}}</p>
+            <p>
+              <button @click="disabled">Disabled</button>
+              <button @click="toBlock2">To Block2</button>
+              <button @click="toBlock3">To Block3</button>
+              <button @click="toBlock4">To Block4</button>
+            </p>
+            <teleport :to="dynamicBlock" :disabled="status">
+              <p class="globalModal">
+                Hello Teleport!
+              <p>
+            </teleport>
+          </div>
+        </td>
+        <td style="width: 50%;height:50%;">
+          <h1>Block2</h1>
+          <div id="Block2"></div>
+        </td>
+      </tr>
+      <tr>
+        <td style="width: 50%;height:50%;">
+          <h1>Block3</h1>
+          <div id="Block3"></div>
+        </td>
+        <td style="width: 50%;height:50%;">
+          <h1>Block4</h1>
+          <div id="Block4"></div>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.0-rc.5/vue.global.prod.js"></script>
+  <script>
+    
+    const { createApp, ref, computed } = Vue;
+
+    createApp({
+      setup(){
+
+        let status = ref(false)
+        let dynamicBlock = ref("#Block2");
+        let statusText = computed( () => (status.value === true ? "已停用" : "已啟用")+" Teleport" );
+        let disabled = () => status.value = !status.value
+        let toBlock2 = ()=> dynamicBlock.value = "#Block2";
+        let toBlock3 = ()=> dynamicBlock.value = "#Block3";
+        let toBlock4 = ()=> dynamicBlock.value = "#Block4";
+
+        return {
+          // data
+          status, dynamicBlock, 
+          // computed
+          statusText,
+          // event
+          disabled, toBlock2, toBlock3, toBlock4
+        }
+      }
+    })
+    .mount("#app")
+
+  </script>
+</body>
+</html>

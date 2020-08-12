@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>attr Fallthrough</title>
+  <style>
+    .full{ width: 100%; background:#f00;}
+    .whalf{ display:block; width: 50%;  background:#0f0;}
+  </style>
+</head>
+<body>
+  
+  <div id="app">
+    <inherit-posthead :title="ptitle" id="news_post_title" _click="log" @change="log" class="aclass" style="font-size: 40px;"></inherit-posthead>
+    <inherit-posthead-child-use :title="ptitle" id="news_post_title" @click="log" class="aclass" style="font-size: 40px;"></inherit-posthead-child-use>
+    <no-inherit-posthead :title="ptitle" id="news_post_title" @click="log" class="aclass" style="font-size: 40px;"></no-inherit-posthead>
+    <no-inherit-posthead-child-use :title="ptitle" id="news_post_title" @click="log" class="aclass" style="font-size: 40px;"></no-inherit-posthead-child-use>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.0-rc.5/vue.global.prod.js"></script>
+  <script>
+
+    const { h, createApp } = Vue;
+
+    const noInherit = {inheritAttrs: false};
+
+    function CreateHead(state, useInChild){
+
+      let childAttrs = useInChild===true ? 
+        ` :class="[$attrs.class, {tname:true}]" :style="[$attrs.style]" @click="$attrs.onClick" `
+        : ""
+
+      return Object.assign(
+        {}, 
+        {
+          props: [ "title" ],
+          template: `
+          <div class="full">
+            <h1 class="whalf" ${childAttrs} >{{title}}</h1>
+            <input>
+          </div>
+          `,
+          mounted(){
+            // 查看傳入的$attrs
+            console.log(this.$attrs)
+            // 在Vue3這個參數將不會被啟用
+            console.log(this.$listeners)
+          }
+        }, 
+        state || {}
+      )
+    }
+
+    createApp({
+      components:{
+        inheritPosthead: CreateHead(null, false),               // 繼承, 子節點不使用$attr
+        inheritPostheadChildUse: CreateHead(null, true),        // 繼承, 將$attr使用在子節點
+        NoInheritPosthead: CreateHead(noInherit, false),        // 不繼承, 子節點不使用$attr
+        NoInheritPostheadChildUse: CreateHead(noInherit, true), // 不繼承, 將$attr使用在子節點
+      },
+      data(){
+        return {
+          ptitle: "Post title"
+        }
+      },
+      methods:{
+        log(){
+          console.log.apply(console, arguments)
+        }
+      }
+    })
+    .mount("#app")
+    ;
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>composition api basic</title>
+</head>
+<body>
+  
+  <div id="app">
+    <button class="addBtn">+ Add</button>
+    <div id="countbody"></div>
+    
+    <button class="addBtn2">+ Add</button>
+    <div id="countbody2"></div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.0-rc.5/vue.global.prod.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script>
+    
+    const { h, reactive, watch, createApp, render, createVNode, ref } = Vue;
+
+    /*
+    // 一般的寫法
+    const { h, reactive, watch, createApp } = Vue;
+    
+    const state = reactive({count: 0});
+
+    const add = () => state.count++;
+
+    watch(() => document.getElementById("countbody").innerHTML = `count: ${state.count}`)
+
+    document.querySelector(".")
+    */
+
+    function setup({init, onchange})
+    {
+
+      if(!init || typeof init !== 'function') 
+        return console.error("need init:function");
+
+      const state = reactive({count: 0});
+
+      const add = () => state.count++;
+
+      if(typeof onchange==="function") 
+        watch(() => onchange(state.count));
+
+      init({ state, add });
+
+    }
+
+    setup({
+      onchange(value){
+        $("#countbody").html(`count: ${value}`);
+      },
+      init({add}){
+        $(".addBtn").click(() => add())
+      },
+    });
+
+    setup({
+      onchange(value){
+        $("#countbody2").html(`count: ${value}`);
+      },
+      // view
+      init({add}){
+        $(".addBtn2").click(() => add())
+      }
+    });
+
+  </script>
+</body>
+</html>

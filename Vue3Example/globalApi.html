@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Global API</title>
+</head>
+<body>
+  
+  <div id="app">
+    <headcomp title="Vue 3"></headcomp>
+    <subtitlecomp description="global API example" style="color: #bbb;"></subtitlecomp>
+    <div>Count {{count}}</div>
+    <button @click="increase" >+ Increase</button>
+    <button @click="decreasing" >- Decrease</button>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.0-rc.5/vue.global.prod.js"></script>
+  <script>
+    
+    const { h, createApp, reactive } = Vue;
+
+    const app = createApp({
+      data(){
+        return {
+          count: 0
+        }
+      },
+      methods:{
+        increase(){
+          this.count++;
+        },
+        decreasing(){
+          if(this.count > 0) this.count--;
+        }
+      }
+    });
+
+    // 全域component
+    const headComponent = {
+      props: ["title"],
+      render(){
+        return h("h1", {...this.$attrs}, this.title);
+      }
+    };
+
+    // 使用setup可以不用使用this
+    const subtitleComponent = {
+      props: ["description"],
+      setup(props, {attrs}){
+
+        let state = reactive({
+          memo: " (memo)"
+        });
+
+        return () => h("h2", {...attrs}, [props.description, state.memo]);
+
+      }
+    };
+
+    app.component("headcomp", headComponent);
+    app.component("subtitlecomp", subtitleComponent);
+
+
+    app.mount("#app");
+    
+  </script>
+</body>
+</html>

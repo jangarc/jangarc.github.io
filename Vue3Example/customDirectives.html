@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Custom directives change</title>
+</head>
+<body>
+  
+  <div id="app">
+    <h1>請按F12開啟Console觀看觸發事件</h1>
+    <div><button @click="toggle">觸發 mount & unmount 事件</button></div>
+    <div v-if="show">
+      <div 
+        style="width: 100px;height:100px;margin: 10px 0;" 
+        :style="{background: 'rgba('+color.R+', '+color.G+', '+color.B+',1)'}"
+      ></div>
+      <example title="R" :value="color.R" @update:value="event => color.R = event" memo="v-model的等價用法(比較用)"></example>
+      <example title="R" v-model:value="color.R"></example>
+      <example title="G" v-model:value="color.G"></example>
+      <example title="B" v-model:value="color.B"></example>
+    </div>
+    <P><a href="https://jsfiddle.net/abcdarc/uLzmrfkh/" target="_blank">Vue 2 Example對應參考</a></P>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.0-rc.5/vue.global.prod.js"></script>
+  <script>
+
+    const { createApp } = Vue;
+
+    
+
+    // 綁定前 => in Vue2 = bind
+    function beforeMount(el, binding, vnode, oldVnode){
+      console.log("directive beforeMount", arguments)
+      el.type = "range"
+      el.min = 0;
+      el.max = 255;
+      el.value = typeof binding.value==="number" ? binding.value : 0 ;
+      // 值檢查綁定
+      el.onchange = function listenOnChange(event){
+        if(Number(event.target.value) > 255) 
+          event.target.value = 255;
+        if(Number(event.target.value) < 0) 
+          event.target.value = 0;
+      }; 
+    };
+
+    // 綁定後 => in Vue2 = inserted
+    function mounted(el, binding, vnode, oldVnode){
+      console.log("directive mounted", arguments, this)
+    };
+
+    // 更新前 => in Vue2 = update
+    function beforeUpdate(el, binding, vnode, oldVnode){
+      console.log("directive beforeUpdate", arguments)
+    }
+    
+    // 更新後 => in Vue2 = componentUpdated
+    function updated(el, binding, vnode, oldVnode){
+      console.log("directive updated", arguments)
+    }
+
+    // 解綁前 => in Vue2 = 不存在Vue2
+    function beforeUnmount(el, binding, vnode, oldVnode){
+      console.log("directive beforeUnmount", arguments)
+    }
+
+    // 解綁後 => in Vue2 = unbind
+    function unmounted(el, binding, vnode, oldVnode){
+      console.log("directive unmounted", arguments)
+    }
+
+    var app = createApp({
+      components: {
+        example: {
+          props: {
+            title: String,
+            memo: String,
+            value: {
+              type: Number,
+              default: 0
+            },
+          },
+          template: `<div>{{title}} <input v-color-range="value" :value="value" @change="updateValue" >{{ (memo) ? "PS. "+memo : "" }}</div>`,
+          methods: {
+            updateValue(){
+              if(event!=null && event.target!=null)
+              {
+                this.$emit('update:value', event.target.value)
+              }
+            }
+          },
+        }
+      },
+      data(){
+        return {
+          show: true,
+          color: {
+            R: 255, 
+            G: 150, 
+            B: 0
+          }
+        }
+      },
+      methods: {
+        toggle(){
+          this.show = !this.show;
+        },
+      }
+    });
+
+    // 註冊到全域 => component才能使用
+    app.directive("color-range", {
+      beforeMount,
+      mounted,
+      beforeUpdate,
+      updated,
+      beforeUnmount,
+      unmounted
+    });
+    
+    app.mount("#app");
+
+    
+  </script>
+</body>
+</html>
