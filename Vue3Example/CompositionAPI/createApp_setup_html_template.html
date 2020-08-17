@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+
+  <div id="app">
+    <h1>Vue 3 Composition API</h1>
+    <h2>一個沒有this的專案開發風格</h2>
+    <p>Count: {{state.count}}</p>
+    <p>
+      <button v-on:click="increase">+</button>
+      <button v-on:click="decreasing">-</button>
+    </p>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.0-rc.5/vue.global.prod.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+  <script>
+
+    // 解耦全域API
+    const { reactive, createApp } = Vue;
+
+    const app = createApp({
+      setup(){
+
+        // 建立一個reactivity資料
+        const state = reactive({
+          count: 0,
+        });
+
+        // 建立&綁定按鈕事件
+        const increase = () => { state.count++; };
+        const decreasing = () => { if(state.count > 0) state.count-- };
+
+        return {
+          // 資料
+          state,
+          // 事件
+          increase, decreasing
+        }
+
+      }
+    })
+
+    app.mount("#app");
+
+  </script>
+
+</body>
+</html>

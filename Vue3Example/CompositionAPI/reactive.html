@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+
+  <div id="app">
+    <h1>reactive API</h1>
+    <p>Count: {{state.count}}</p>
+    <p>
+      <button v-on:click="increase">+</button>
+      <button v-on:click="decreasing">-</button>
+    </p>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.0-rc.5/vue.global.prod.js"></script>
+
+  <script>
+
+  // 解耦全域API
+  const { reactive, createApp } = Vue;
+
+  createApp({
+    setup(){
+
+      // 建立一個reactivity資料
+      const state = reactive({
+        count: 0,
+      });
+
+      // 建立&綁定按鈕事件
+      const increase = () => { state.count++; };
+      const decreasing = () => { if(state.count > 0) state.count-- };
+
+      return {
+        state,
+        increase, decreasing
+      };
+
+    }
+  })
+  .mount("#app")
+
+
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+
+
+  <script>
+
+    // 簡單實現 Vue3 ref & watch
+    const { ref, watch } = (function(){
+
+      let _activeEffect; // 目前註冊事件
+
+      var targetMap = new WeakMap(); // 全部事件集合
+
+      // 增加事件
+      var track = function(target, key){
+
+        // 取得對應物件
+        let depsMap = targetMap.get(target);
+
+        // 如果還不存在時生成
+        if(!depsMap){
+          targetMap.set(target, (depsMap = new Map()))
+        }
+
+        // 取得對應事件
+        let dep = depsMap.get(key);
+
+        // 如果不存在時生成
+        if(!dep){
+          depsMap.set(key, (dep = new Set()))
+        }
+
+        // 檢查是否已有相同事件, 沒有時新增
+        if (!dep.has(_activeEffect)) {
+          dep.add(_activeEffect);
+        }
+
+      };
+
+      // 取得及觸發事件
+      var tigger = function(target, key, newValue){
+
+        // 取得對應物件
+        const depsMap = targetMap.get(target);
+
+        // 找不到物件時中斷
+        if(!depsMap) return;
+
+        const effects = new Set(); // 建立本次要處理的事件物件
+
+        // 建立增加事件的函式
+        const add = (effectsToAdd) => {
+          if (effectsToAdd) {
+            effectsToAdd.forEach(effect => effects.add(effect));
+          }
+        };
+
+        // 如果指定值存在時, 把事件加到本次要處理的事件清單
+        if(key !== void 0) add(depsMap.get(key));
+
+        // 批次執行事件
+        if(effects.size > 0)
+          effects.forEach(effect => effect());
+
+      }
+
+      // ref函式
+      function ref(value){
+
+        let _value = value;
+
+        let result = {
+          _isRef: true,
+          get value(){
+            track(result, 'value');
+            return _value;
+          },
+          set value(newValue){
+            _value = newValue;
+            tigger(result, 'value', newValue);
+          }
+        }
+
+        return result;
+
+      }
+
+      function watch(fn){
+        _activeEffect = fn;
+        fn();
+      }
+
+      const _public_ = {
+        ref, watch
+      }
+
+      return _public_;
+
+    })()
+
+    // 使用
+    const count = ref(0);
+
+    watch(()=> document.body.innerHTML = "Count: " + count.value);
+
+    //count.value++;
+    setInterval(() => count.value++, 1000)
+
+  </script>
+</body>
+</html>

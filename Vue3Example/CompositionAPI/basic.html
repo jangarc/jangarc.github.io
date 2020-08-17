@@ -1,0 +1,48 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+
+  <div>
+    <h1>Vue 3 Composition API + jQuery</h1>
+    <h2>一個沒有this的專案開發風格，也不強制使Virtual DOM</h2>
+    <p>Count: <span id="CountBlock"></span></p>
+    <p>
+      <button id="Increase">+</button>
+      <button id="Decreasing">-</button>
+    </p>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.0-rc.5/vue.global.prod.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+  <script>
+
+  // 解耦全域API
+  const { reactive, watchEffect } = Vue;
+
+  // 建立一個reactivity資料
+  const state = reactive({
+    count: 0,
+  });
+
+  // 建立&綁定按鈕事件
+  const doIncrease = () => { state.count++; };
+  const doDecreasing = () => { if(state.count > 0) state.count-- };
+  $("#Increase").click(doIncrease);
+  $("#Decreasing").click(doDecreasing);
+
+  // 觸發事件
+  const CountBlock = $("#CountBlock");
+
+  // 監控state.count，當資料變化時觸發顯示變更
+  watchEffect(() => CountBlock.text(state.count));
+
+  </script>
+
+</body>
+</html>

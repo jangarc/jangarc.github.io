@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+
+  <div id="app"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.0-rc.5/vue.global.prod.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+  <script>
+
+    // 解耦全域API
+    const { h, reactive, createApp } = Vue;
+
+    const app = createApp({
+      setup(){
+
+        // 建立一個reactivity資料
+        const state = reactive({
+          count: 0,
+        });
+
+        // 建立&綁定按鈕事件
+        const increase = () => { state.count++; };
+        const decreasing = () => { if(state.count > 0) state.count-- };
+
+        return () => [
+          h("h1", "Vue 3 Composition API"),
+          h("h2", "一個沒有this的專案開發風格"),
+          h("p", ["Count: ", state.count]),
+          h("p", [
+            h("button", {onClick: increase}, "+"),
+            h("button", {onClick: decreasing}, "-"),
+          ]),
+        ];
+
+      }
+    })
+
+    app.mount("#app");
+
+  </script>
+
+</body>
+</html>
