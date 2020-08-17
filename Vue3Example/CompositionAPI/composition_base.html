@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+
+  <div id="app"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.0.0-rc.5/vue.global.prod.js"></script>
+  <script src="./scripts/controll.js"></script>
+  <script src="./scripts/model.js"></script>
+  <script src="./scripts/view.js"></script>
+
+  <script>
+
+    const { h, createApp, reactive, ref, watchEffect } = Vue;
+
+    /*
+    createApp({
+      setup(){
+        var count = CounterModel();
+        var { increase, decreasing } = counterControll(count);
+        return CounterView( count, { increase, decreasing } )
+      }
+    })
+    .mount("#app");
+    */
+
+    createApp({
+      setup(){
+
+        var count = CounterModel();
+        var logItems = LogModel();
+
+        var { addLog, generateLog } = LogControll(logItems);
+        var { increase, decreasing } = counterControll(count, {
+          onCountChange(changeInfo){
+            addLog(generateLog(`${changeInfo.type} to ${changeInfo.value}`))
+          }
+        });
+
+        var logView = LogView( logItems, "Count Log")
+
+        return CounterView(
+          count,
+          { increase, decreasing },
+          logView
+        )
+
+      }
+    })
+    .mount("#app");
+
+  </script>
+</body>
+</html>
